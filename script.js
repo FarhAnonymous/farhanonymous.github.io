@@ -31,27 +31,28 @@
     var lensEl = $("#lensN"), totalEl = $("#totalN"), hintEl = $("#hint");
     if (hintEl && coarse) hintEl.textContent = "drag your finger to scan";
 
-    var W = 0, H = 0, dpr = 1, lensR = 130, layer = null, trees = [], totalFound = 0;
+    var W = 0, H = 0, dpr = 1, lensR = 130, layer = null, layer2 = null, trees = [], totalFound = 0;
     var lens = { x: 0, y: 0, tx: 0, ty: 0, active: false };
     var raf = 0, visible = true, idleTimer = 0, lastN = -1, inited = false;
 
-    function drawPalm(c, x, y, r, rot, tone) {
+    function drawPalm(c, x, y, r, rot, tone, strong) {
       c.save(); c.translate(x, y);
-      c.fillStyle = "rgba(0,0,0,0.30)";
+      c.fillStyle = strong ? "rgba(0,0,0,0.10)" : "rgba(0,0,0,0.035)";
       c.beginPath(); c.arc(r * 0.18, r * 0.22, r * 0.9, 0, 6.2832); c.fill();
       // feather-like fronds radiating from the crown, as seen from above
-      var n = 14, i, a, len, bend;
+      var n = 14, i, a, len, bend, l;
       c.lineCap = "round"; c.lineWidth = Math.max(1.6, r * 0.17);
       for (i = 0; i < n; i++) {
         a = rot + i * 6.2832 / n;
         len = r * (0.88 + 0.14 * ((i * 7) % 3) / 2);
         bend = (i % 2 ? 0.28 : -0.28);
-        c.strokeStyle = "hsl(" + (150 + tone * 12) + ",42%," + (24 + (i % 3) * 5 + tone * 4) + "%)";
+        l = strong ? (34 + (i % 3) * 7 + tone * 6) : (82 + (i % 3) * 3 + tone * 3);
+        c.strokeStyle = "hsl(215,6%," + l + "%)";
         c.beginPath(); c.moveTo(0, 0);
         c.quadraticCurveTo(Math.cos(a + bend) * len * 0.55, Math.sin(a + bend) * len * 0.55, Math.cos(a) * len, Math.sin(a) * len);
         c.stroke();
       }
-      c.fillStyle = "#6fd2a4"; c.beginPath(); c.arc(0, 0, r * 0.14, 0, 6.2832); c.fill();
+      c.fillStyle = strong ? "#9aa1a9" : "#d7dadd"; c.beginPath(); c.arc(0, 0, r * 0.14, 0, 6.2832); c.fill();
       c.restore();
     }
 
@@ -64,13 +65,12 @@
       var sp = W < 600 ? 40 : W < 1100 ? 46 : 52;
       lensR = W < 600 ? 92 : W < 1100 ? 118 : 140;
 
-      layer = document.createElement("canvas");
-      layer.width = cv.width; layer.height = cv.height;
-      var lc = layer.getContext("2d");
-      lc.scale(dpr, dpr);
-      var g = lc.createLinearGradient(0, 0, W, H);
-      g.addColorStop(0, "#0d2c24"); g.addColorStop(1, "#091c16");
-      lc.fillStyle = g; lc.fillRect(0, 0, W, H);
+      layer = document.createElement("canvas"); layer.width = cv.width; layer.height = cv.height;
+      layer2 = document.createElement("canvas"); layer2.width = cv.width; layer2.height = cv.height;
+      var lc = layer.getContext("2d"), lc2 = layer2.getContext("2d");
+      lc.scale(dpr, dpr); lc2.scale(dpr, dpr);
+      lc.fillStyle = "#fafaf9"; lc.fillRect(0, 0, W, H);
+      lc2.fillStyle = "#f4f4f2"; lc2.fillRect(0, 0, W, H);
 
       var rand = rng(11), rowH = sp * 0.87;
       var rows = Math.ceil(H / rowH) + 1, cols = Math.ceil(W / sp) + 1;
@@ -85,7 +85,9 @@
           var t = { x: x, y: y, r: rad, found: found, conf: 0.9 + rand() * 0.09, label: ((ro * 3 + co * 5) % 11 === 0) };
           trees.push(t);
           if (found && x > -rad && x < W + rad && y > -rad && y < H + rad) totalFound++;
-          drawPalm(lc, x, y, rad, rand() * 6.2832, rand());
+          var rot = rand() * 6.2832, tone = rand();
+          drawPalm(lc, x, y, rad, rot, tone, false);
+          drawPalm(lc2, x, y, rad, rot, tone, true);
         }
       }
       if (totalEl) totalEl.textContent = totalFound;
@@ -93,18 +95,20 @@
       lens.x = clamp(lens.x, 0, W); lens.y = clamp(lens.y, 0, H);
     }
 
+    var ACCENT = "#234b8f";
     function render() {
-      if (!layer) return;
+      if (!layer || !layer2) return;
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.drawImage(layer, 0, 0);
+      // inside the lens the plantation is drawn in darker, clearer greys
+      ctx.save();
+      ctx.beginPath(); ctx.arc(lens.x * dpr, lens.y * dpr, lensR * dpr, 0, 6.2832); ctx.clip();
+      ctx.drawImage(layer2, 0, 0);
+      ctx.restore();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      var g = ctx.createRadialGradient(lens.x, lens.y, lensR * 0.9, lens.x, lens.y, lensR * 2.4);
-      g.addColorStop(0, "rgba(5,20,15,0)"); g.addColorStop(1, "rgba(5,20,15,0.58)");
-      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-
       var n = 0;
-      ctx.lineWidth = 1.5; ctx.strokeStyle = "#e0a43a"; ctx.fillStyle = "#e0a43a";
+      ctx.lineWidth = 1.5; ctx.strokeStyle = ACCENT; ctx.fillStyle = ACCENT;
       ctx.font = "10px ui-monospace, Menlo, Consolas, monospace";
       for (var i = 0; i < trees.length; i++) {
         var t = trees[i];
@@ -121,7 +125,7 @@
       }
       ctx.globalAlpha = 1;
 
-      ctx.strokeStyle = "rgba(224,164,58,0.9)"; ctx.lineWidth = 1.5;
+      ctx.strokeStyle = ACCENT; ctx.lineWidth = 1.5;
       ctx.setLineDash([6, 5]);
       ctx.beginPath(); ctx.arc(lens.x, lens.y, lensR, 0, 6.2832); ctx.stroke();
       ctx.setLineDash([]);
@@ -235,14 +239,14 @@
       state = s;
       var e = s * s * (3 - 2 * s);
       ctx.setTransform(scale, 0, 0, scale, 0, 0);
-      ctx.fillStyle = "#0b231c"; ctx.fillRect(0, 0, LW, LH);
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, LW, LH);
 
       for (var i = 0; i < N; i++) {
         var x = lerp(A[i].x, B[i].x, e), y = lerp(A[i].y, B[i].y, e), r = lerp(A[i].r, B[i].r, e);
-        ctx.fillStyle = "rgba(0,0,0,0.3)"; ctx.beginPath(); ctx.arc(x + 2, y + 3, r, 0, 6.2832); ctx.fill();
+        ctx.fillStyle = "rgba(0,0,0,0.10)"; ctx.beginPath(); ctx.arc(x + 1.5, y + 2.5, r, 0, 6.2832); ctx.fill();
         var g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 1, x, y, r);
-        g.addColorStop(0, e > 0.5 ? "#4a9a86" : "#4fb487");
-        g.addColorStop(1, e > 0.5 ? "#1f5a58" : "#1f6b50");
+        g.addColorStop(0, "#b4bac1");
+        g.addColorStop(1, "#6b727a");
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill();
       }
 
@@ -250,12 +254,11 @@
       for (var ty = 0; ty < TY; ty++) for (var tx = 0; tx < TX; tx++) {
         var rel = clamp(0.97 - s * (0.12 + 0.82 * noise[ty * TX + tx]), 0, 1);
         var w = clamp((0.97 - rel) / 0.6, 0, 1);             // 0 = reliable, 1 = check
-        var rr = Math.round(lerp(47, 224, w)), gg = Math.round(lerp(143, 164, w)), bb = Math.round(lerp(107, 58, w));
-        ctx.fillStyle = "rgba(" + rr + "," + gg + "," + bb + "," + (0.16 + 0.26 * w) + ")";
+        ctx.fillStyle = "rgba(35,75,143," + (0.02 + 0.2 * w) + ")";
         ctx.fillRect(tx * tw + 1, ty * th + 1, tw - 2, th - 2);
         if (rel < 0.6) {
           bad++;
-          ctx.strokeStyle = "rgba(224,164,58,0.95)"; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+          ctx.strokeStyle = "rgba(35,75,143,0.9)"; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
           ctx.strokeRect(tx * tw + 2, ty * th + 2, tw - 4, th - 4); ctx.setLineDash([]);
         }
       }
