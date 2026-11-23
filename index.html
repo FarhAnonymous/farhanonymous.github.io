@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mohammad Farhan · Computer Vision for UAV Imagery</title>
-  <meta name="description" content="Mohammad Farhan: MSc researcher at Universiti Sains Malaysia working on real-time UAV-based detection and counting, edge deployment, and reliable aerial perception.">
+  <meta name="description" content="Mohammad Farhan: MSc graduate (USM) working on real-time UAV-based detection and counting, edge deployment, and reliable aerial perception.">
   <link rel="stylesheet" href="style.css">
   <script type="application/ld+json">
   {
@@ -24,29 +24,42 @@
 </head>
 <body>
 
+<!-- ============ NAV (sticky) ============ -->
 <header class="topbar">
   <nav>
     <a class="brand" href="#top">M. Farhan</a>
-    <ul>
+    <ul id="navlinks">
       <li><a href="#about">About</a></li>
-      <li><a href="#research">Research</a></li>
+      <li><a href="#highlights">Research</a></li>
+      <li><a href="#news">News</a></li>
       <li><a href="#publications">Publications</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#education">Education</a></li>
       <li><a href="#awards">Awards</a></li>
+      <li><a href="#skills">Skills</a></li>
     </ul>
   </nav>
 </header>
 
 <main id="top">
 
-  <!-- HERO -->
+  <!-- ============ HERO ============ -->
   <section class="hero">
     <div class="hero-text">
-      <h1>Mohammad Farhan</h1>
-      <p class="role">MSc in Aerospace Engineering (Research)<br>Universiti Sains Malaysia, Penang</p>
-      <p class="tagline">I work on computer vision for drone imagery: detectors that count trees at scale and run on small, low-cost hardware.</p>
+      <div class="idrow">
+        <img class="portrait" src="assets/photo.jpg" alt="Portrait of Mohammad Farhan" width="84" height="84"
+             onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'portrait avatar',textContent:'MF'}))">
+        <div>
+          <h1>Mohammad Farhan</h1>
+          <p class="role">MSc in Aerospace Engineering (Research), Universiti Sains Malaysia</p>
+        </div>
+      </div>
+
+      <p class="tagline">I build computer vision systems that count trees from drone images, and I want to make them <em>trustworthy</em> wherever they are flown.</p>
+
+      <p class="status"><span class="dot"></span> Applying for PhD positions in Australia and New Zealand</p>
+
       <ul class="links">
         <li><a href="mailto:er.farhan2000@gmail.com">Email</a></li>
         <li><a href="assets/Farhan_CV.pdf">CV</a></li>
@@ -55,159 +68,182 @@
         <li><a href="https://linkedin.com/in/farhanonymous">LinkedIn</a></li>
       </ul>
     </div>
-    <div class="hero-photo">
-      <img src="assets/photo.jpg" alt="Portrait of Mohammad Farhan" width="220" height="220"
-           onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'avatar',textContent:'MF'}))">
-    </div>
+
+    <figure class="canvas-wrap" aria-label="Illustration of tree detection on an aerial plantation view">
+      <svg id="aerial" viewBox="0 0 400 300" role="img" aria-hidden="true"></svg>
+      <figcaption>
+        <span class="mono">illustrative</span>
+        <span class="mono counter">detected: <b id="count">0</b></span>
+      </figcaption>
+    </figure>
   </section>
 
-  <!-- KEY NUMBERS -->
+  <!-- ============ KEY NUMBERS ============ -->
   <section class="stats" aria-label="Key results">
-    <div><strong>98.8%</strong><span>mAP@0.5 on oil palm detection</span></div>
-    <div><strong>111,810</strong><span>annotated trees</span></div>
-    <div><strong>6,080</strong><span>drone images collected</span></div>
-    <div><strong>Edge</strong><span>runs on Raspberry Pi 4B</span></div>
+    <div><strong data-count="98.8" data-dec="1" data-suffix="%">98.8%</strong><span>mAP@0.5, oil palm detection</span></div>
+    <div><strong data-count="111810">111,810</strong><span>annotated trees</span></div>
+    <div><strong data-count="6080">6,080</strong><span>UAV images</span></div>
+    <div><strong>Pi 4B</strong><span>edge inference, OpenVINO</span></div>
   </section>
 
-  <!-- ABOUT -->
+  <!-- ============ ABOUT ============ -->
   <section id="about">
     <h2>About</h2>
     <p>I recently completed a research MSc in Aerospace Engineering at Universiti Sains Malaysia, supervised by <a href="mailto:nishat@usm.my">Dr. Mohammad Nishat Akhtar</a>. My thesis was approved by the USM senate in October 2026, and the degree is conferred at the November 2026 convocation. It compares YOLO and transformer detectors for finding oil palm trees in UAV imagery.</p>
-    <p>Most of my time has gone into the practical side of this problem: building and labelling the dataset, comparing models, and getting the best one to run on a Raspberry Pi in the field. Along the way I ran into a question I want to keep working on, which is what happens when a model that works well on one plantation is taken somewhere else, and how much a user should trust the count it gives.</p>
-    <p>I am applying for PhD positions in Australia and New Zealand. If your group works on aerial or remote-sensing perception, I would be glad to hear from you at <a href="mailto:er.farhan2000@gmail.com">er.farhan2000@gmail.com</a>.</p>
+    <p>Most of my time went into the practical side of the problem: building and labelling the dataset, comparing models, and getting the best one to run on a Raspberry Pi in the field. Along the way I ran into a question I want to keep working on: what happens when a model that works well on one plantation is taken somewhere else, and how much a user should trust the count it gives.</p>
+    <p>If your group works on aerial or remote-sensing perception, I would be glad to hear from you at <a href="mailto:er.farhan2000@gmail.com">er.farhan2000@gmail.com</a>.</p>
   </section>
 
-  <!-- RESEARCH -->
-  <section id="research">
-    <h2>Research Interests</h2>
-    <ul class="plain">
-      <li><strong>Aerial object detection and counting.</strong> Dense, small objects in UAV imagery, from plantations to forests.</li>
-      <li><strong>Cross-domain generalisation.</strong> Models that keep working when the region, species, sensor or flight altitude changes.</li>
-      <li><strong>Reliable predictions.</strong> Attaching a measure of confidence to a count, so that people know which results to check by hand.</li>
-      <li><strong>Edge deployment.</strong> Real-time inference on low-power hardware for field use.</li>
+  <!-- ============ RESEARCH HIGHLIGHTS ============ -->
+  <section id="highlights">
+    <h2>Research Highlights</h2>
+    <div class="themes">
+      <article class="theme">
+        <span class="num">01</span>
+        <h3>Real-time aerial counting</h3>
+        <p>Detecting small, densely packed trees in UAV imagery and counting them accurately. I compared YOLOv8, YOLOv11 and the transformer-based D-FINE on a large plantation dataset.</p>
+        <p class="refs">Papers: YOLOv8 on edge devices (2025) · YOLOv11 vs D-FINE (under review)</p>
+      </article>
+      <article class="theme">
+        <span class="num">02</span>
+        <h3>Edge deployment</h3>
+        <p>Making the detector small enough to run on a Raspberry Pi 4B with an Intel Neural Compute Stick, so it works in the field without a GPU or a network connection.</p>
+        <p class="refs">Papers: YOLOv8 on edge devices (2025)</p>
+      </article>
+      <article class="theme next">
+        <span class="num">03</span>
+        <h3>Reliable counts across regions <em>(next)</em></h3>
+        <p>Keeping a counter accurate when the region, species, sensor or altitude changes, and attaching a measure of confidence to each count so people know which results to check by hand.</p>
+        <p class="refs">PhD proposal in preparation, available on request</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ NEWS ============ -->
+  <section id="news">
+    <h2>News</h2>
+    <ul class="news">
+      <li><span class="date">Late Nov 2026</span> 🎓 MSc degree conferred at the USM convocation.</li>
+      <li><span class="date">Oct 2026</span> 📝 Thesis approved by the USM senate (letter dated 14 October).</li>
+      <li><span class="date">Oct 2026</span> 🗣️ IELTS Academic: 7.0 overall (C1).</li>
+      <li><span class="date">2026</span> 📄 Systematic review on AI for palm oil tree counting published.</li>
     </ul>
-    <p class="note">Currently preparing a PhD research proposal on trustworthy cross-domain aerial object counting. Happy to share it on request.</p>
+    <details>
+      <summary>Earlier news</summary>
+      <ul class="news">
+        <li><span class="date">2025</span> 📄 Paper on real-time palm oil tree counting with YOLOv8 on edge devices published.</li>
+        <li><span class="date">2024</span> 🏅 Awarded the Malaysian International Scholarship and the USM Graduate Fellowship.</li>
+      </ul>
+    </details>
   </section>
 
-  <!-- PUBLICATIONS -->
+  <!-- ============ PUBLICATIONS ============ -->
   <section id="publications">
     <h2>Publications</h2>
     <p class="note">Full list on <a href="https://scholar.google.com/citations?user=7wqkW4sAAAAJ">Google Scholar</a>. My name is in bold.</p>
 
-    <ul class="pubs">
+    <h4 class="year">2026</h4>
+    <article class="pub">
+      <div class="badges"><span class="venue-tag">Journal</span><span class="topic">Review</span><span class="topic">Palm oil</span></div>
+      <a class="title" href="https://doi.org/10.30772/qjes.2026.165663.1755">Artificial Intelligence for Palm Oil Tree Counting and Management Using Deep Structured Learning: A Systematic Review</a>
+      <div class="authors"><b>M. Farhan</b>, Q. S. Hamad, M. N. Akhtar, R. Rajendran, M. Danish, E. Abu Bakar</div>
+      <p class="tldr"><b>TL;DR</b> A systematic review of how deep learning is used to count and manage oil palm trees.</p>
+      <div class="plinks"><a href="https://doi.org/10.30772/qjes.2026.165663.1755">DOI</a></div>
+    </article>
+
+    <h4 class="year">2025</h4>
+    <article class="pub">
+      <div class="badges"><span class="venue-tag">J. Umm Al-Qura Univ. Eng. Archit.</span><span class="topic">Edge AI</span><span class="topic">UAV</span></div>
+      <a class="title" href="https://doi.org/10.1007/s43995-025-00164-7">Efficient Real-Time Palm Oil Tree Detection and Counting Using YOLOv8 Deployed on Edge Devices</a>
+      <div class="authors"><b>M. Farhan</b>, M. N. Akhtar, E. Abu Bakar</div>
+      <p class="tldr"><b>TL;DR</b> A YOLOv8 detector that counts palm trees from drone images in real time on edge hardware.</p>
+      <div class="plinks"><a href="https://doi.org/10.1007/s43995-025-00164-7">DOI</a></div>
+    </article>
+
+    <h4 class="year">Under review</h4>
+    <article class="pub">
+      <div class="badges"><span class="venue-tag soft">Egyptian Informatics Journal</span><span class="topic">UAV</span><span class="topic">Transformers</span></div>
+      <span class="title">Comparative Analysis of Oil Palm Tree Counting from UAV Imagery Using YOLOv11 and Transformer-Based D-FINE Detection Models</span>
+      <div class="authors"><b>M. Farhan</b>, M. N. Akhtar, I. M. Shaikh, E. Abu Bakar</div>
+      <p class="tldr"><b>TL;DR</b> A head-to-head comparison of YOLOv11 and D-FINE on a 6,080-image, 111,810-tree dataset.</p>
+    </article>
+    <article class="pub">
+      <div class="badges"><span class="venue-tag soft">IEEE Access</span><span class="topic">Video analytics</span><span class="topic">Road safety</span></div>
+      <span class="title">Enhancing Cyclist Safety: A YOLO-Based Approach for Measuring Lateral Passing Distance</span>
+      <div class="authors">N. S. A. Sukora, K. Zahra, <b>M. Farhan</b>, M. N. Akhtar, E. A. Bakar</div>
+      <p class="tldr"><b>TL;DR</b> Measuring how closely motorists pass cyclists from riding video.</p>
+    </article>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section id="projects">
+    <h2>Projects</h2>
+    <ul class="projects">
       <li>
-        <span class="tag">2026</span>
-        <div>
-          <a class="title" href="https://doi.org/10.30772/qjes.2026.165663.1755">Artificial Intelligence for Palm Oil Tree Counting and Management Using Deep Structured Learning: A Systematic Review</a>
-          <div class="authors"><b>M. Farhan</b>, Q. S. Hamad, M. N. Akhtar, R. Rajendran, M. Danish, E. Abu Bakar</div>
-          <div class="links-inline"><a href="https://doi.org/10.30772/qjes.2026.165663.1755">DOI</a></div>
-        </div>
+        <div class="phead"><strong>UAV Oil Palm Detection and Counting</strong><span class="when">MSc thesis · 2024–2026</span></div>
+        <p>A full pipeline from drone image to count. I built a dataset of 6,080 DJI M30T images with 111,810 annotated trees across Penang, then compared YOLOv8, YOLOv11 and D-FINE. The pipeline reached 98.8% mAP@0.5 while staying real-time.</p>
+        <p class="stack">Python · PyTorch · YOLOv8 · YOLOv11 · D-FINE</p>
       </li>
       <li>
-        <span class="tag">2025</span>
-        <div>
-          <a class="title" href="https://doi.org/10.1007/s43995-025-00164-7">Efficient Real-Time Palm Oil Tree Detection and Counting Using YOLOv8 Deployed on Edge Devices</a>
-          <div class="authors"><b>M. Farhan</b>, M. N. Akhtar, E. Abu Bakar</div>
-          <div class="venue">Journal of Umm Al-Qura University for Engineering and Architecture, 16, 1293–1308</div>
-          <div class="links-inline"><a href="https://doi.org/10.1007/s43995-025-00164-7">DOI</a></div>
-        </div>
+        <div class="phead"><strong>Palm Counting on a Raspberry Pi</strong><span class="when">MSc research</span></div>
+        <p>Optimised the detector for a Raspberry Pi 4B with an Intel Neural Compute Stick using OpenVINO, so it can be used in plantations without a GPU or a network connection.</p>
+        <p class="stack">OpenVINO · ONNX · Raspberry Pi</p>
       </li>
       <li>
-        <span class="tag under">Under review</span>
-        <div>
-          <span class="title">Comparative Analysis of Oil Palm Tree Counting from UAV Imagery Using YOLOv11 and Transformer-Based D-FINE Detection Models</span>
-          <div class="authors"><b>M. Farhan</b>, M. N. Akhtar, I. M. Shaikh, E. Abu Bakar</div>
-          <div class="venue">Egyptian Informatics Journal</div>
-        </div>
-      </li>
-      <li>
-        <span class="tag under">Under review</span>
-        <div>
-          <span class="title">Enhancing Cyclist Safety: A YOLO-Based Approach for Measuring Lateral Passing Distance</span>
-          <div class="authors">N. S. A. Sukora, K. Zahra, <b>M. Farhan</b>, M. N. Akhtar, E. A. Bakar</div>
-          <div class="venue">IEEE Access</div>
-        </div>
+        <div class="phead"><strong>Cyclist Passing Distance from Video</strong><span class="when">Jan–May 2024</span></div>
+        <p>A video pipeline that measures how closely motorists pass cyclists in naturalistic riding footage. The results fed into national bicycle safety research in Malaysia.</p>
+        <p class="stack">Python · OpenCV · YOLO · statistics</p>
       </li>
     </ul>
   </section>
 
-  <!-- PROJECTS -->
-  <section id="projects">
-    <h2>Selected Projects</h2>
-
-    <div class="cards">
-      <article class="card">
-        <h3>UAV Oil Palm Detection and Counting</h3>
-        <p class="meta">MSc thesis · 2024–2026</p>
-        <p>A full pipeline from drone flight to count. I built a dataset of 6,080 DJI M30T images with 111,810 annotated trees across Penang, then compared YOLOv8, YOLOv11 and the transformer-based D-FINE. The pipeline reached 98.8% mAP@0.5 while staying real-time.</p>
-        <p class="stack">Python · PyTorch · YOLOv8 · YOLOv11 · D-FINE</p>
-      </article>
-
-      <article class="card">
-        <h3>Palm Counting on a Raspberry Pi</h3>
-        <p class="meta">Edge deployment · MSc research</p>
-        <p>Optimised the detector to run on a Raspberry Pi 4B with an Intel Neural Compute Stick using OpenVINO, so it can be used in plantations without a GPU or a network connection.</p>
-        <p class="stack">OpenVINO · ONNX · Raspberry Pi · Python</p>
-      </article>
-
-      <article class="card">
-        <h3>Cyclist Passing Distance from Video</h3>
-        <p class="meta">School of Civil Engineering, USM · Jan–May 2024</p>
-        <p>Built a video pipeline that measures how closely motorists pass cyclists in naturalistic riding footage. The results fed into national bicycle safety research in Malaysia.</p>
-        <p class="stack">Python · OpenCV · YOLO · statistical analysis</p>
-      </article>
-    </div>
-  </section>
-
-  <!-- EXPERIENCE -->
+  <!-- ============ EXPERIENCE ============ -->
   <section id="experience">
     <h2>Experience</h2>
     <table class="timeline">
       <tr><td class="when">Dec 2023 – May 2026</td><td><strong>Graduate Research Assistant</strong>, School of Aerospace Engineering, Universiti Sains Malaysia<br><span class="sub">UAV-based detection and counting of oil palm trees; edge deployment.</span></td></tr>
       <tr><td class="when">Jan – May 2024</td><td><strong>Research Assistant</strong>, School of Civil Engineering, Universiti Sains Malaysia<br><span class="sub">Computer vision system for motorist–cyclist passing distance.</span></td></tr>
-      <tr><td class="when">Dec 2019 – Aug 2024</td><td><strong>Remote Tutor</strong>, Thinking Storm, USA<br><span class="sub">One-on-one and group tutoring in advanced mathematics and science.</span></td></tr>
-      <tr><td class="when">Jan – Mar 2023</td><td><strong>Java Developer Intern</strong>, Oasis Infobyte (New Delhi) and Code Clause (Pune)</td></tr>
     </table>
+    <details>
+      <summary>Earlier roles</summary>
+      <table class="timeline">
+        <tr><td class="when">Dec 2019 – Aug 2024</td><td><strong>Remote Tutor</strong>, Thinking Storm, USA<br><span class="sub">One-on-one and group tutoring in advanced mathematics and science.</span></td></tr>
+        <tr><td class="when">Jan – Mar 2023</td><td><strong>Java Developer Intern</strong>, Oasis Infobyte (New Delhi) and Code Clause (Pune)</td></tr>
+      </table>
+    </details>
   </section>
 
-  <!-- EDUCATION -->
+  <!-- ============ EDUCATION ============ -->
   <section id="education">
     <h2>Education</h2>
     <table class="timeline">
       <tr><td class="when">2024 – 2026</td><td><strong>MSc in Aerospace Engineering (Research)</strong>, Universiti Sains Malaysia<br><span class="sub">Thesis: Fine-Tuning and Comparative Analysis of YOLO and Transformer Models for UAV-Based Palm Oil Tree Detection. Advisor: Dr. Mohammad Nishat Akhtar. Thesis approved by the USM senate, October 2026; degree conferred at the November 2026 convocation.</span></td></tr>
       <tr><td class="when">2020 – 2023</td><td><strong>B.Tech in Computer Science Engineering</strong>, Rajiv Gandhi Technical University, India<br><span class="sub">GPA 3.5/4.00, First Class Honours.</span></td></tr>
-    </table>
-  </section>
-
-  <!-- ENGLISH -->
-  <section id="english">
-    <h2>English Proficiency</h2>
-    <table class="timeline">
       <tr><td class="when">Oct 2026</td><td><strong>IELTS Academic: 7.0 overall (CEFR C1)</strong><br><span class="sub">Test report available on request.</span></td></tr>
     </table>
   </section>
 
-  <!-- AWARDS -->
+  <!-- ============ AWARDS ============ -->
   <section id="awards">
-    <h2>Awards and Scholarships</h2>
+    <h2>Honors and Awards</h2>
     <table class="timeline">
       <tr><td class="when">2024</td><td><strong>Malaysian International Scholarship (MIS)</strong>, Ministry of Higher Education, Malaysia<br><span class="sub">Awarded annually to 100 global candidates.</span></td></tr>
       <tr><td class="when">2024</td><td><strong>Graduate Fellowship (GFUSM)</strong>, Institute of Postgraduate Studies, Universiti Sains Malaysia</td></tr>
     </table>
   </section>
 
-  <!-- SKILLS -->
+  <!-- ============ SKILLS ============ -->
   <section id="skills">
     <h2>Technical Skills</h2>
-    <ul class="plain">
-      <li><strong>Core:</strong> Python, PyTorch, OpenCV, YOLO, deep learning</li>
-      <li><strong>Libraries:</strong> TensorFlow, ONNX, OpenVINO, FastAPI, Flask</li>
-      <li><strong>Data:</strong> NumPy, Pandas, Scikit-learn, Matplotlib</li>
-      <li><strong>Tools:</strong> Git, Linux, Jupyter, Google Colab</li>
+    <ul class="skills">
+      <li><b>Core</b> Python, PyTorch, OpenCV, YOLO, deep learning</li>
+      <li><b>Libraries</b> TensorFlow, ONNX, OpenVINO, FastAPI, Flask</li>
+      <li><b>Data</b> NumPy, Pandas, Scikit-learn, Matplotlib</li>
+      <li><b>Tools</b> Git, Linux, Jupyter, Google Colab</li>
     </ul>
   </section>
 
-  <!-- CONTACT -->
+  <!-- ============ CONTACT ============ -->
   <section id="contact">
     <h2>Contact</h2>
     <p>Penang, Malaysia · <a href="mailto:er.farhan2000@gmail.com">er.farhan2000@gmail.com</a></p>
@@ -220,5 +256,6 @@
   <span>Last updated: November 2026</span>
 </footer>
 
+<script src="script.js"></script>
 </body>
 </html>
