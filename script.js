@@ -46,13 +46,13 @@
         a = rot + i * 6.2832 / n;
         len = r * (0.88 + 0.14 * ((i * 7) % 3) / 2);
         bend = (i % 2 ? 0.28 : -0.28);
-        l = strong ? (34 + (i % 3) * 7 + tone * 6) : (82 + (i % 3) * 3 + tone * 3);
-        c.strokeStyle = "hsl(215,6%," + l + "%)";
+        l = strong ? (26 + (i % 3) * 6 + tone * 5) : (82 + (i % 3) * 3 + tone * 3);
+        c.strokeStyle = strong ? "hsl(" + (148 + tone * 10) + ",48%," + l + "%)" : "hsl(215,6%," + l + "%)";
         c.beginPath(); c.moveTo(0, 0);
         c.quadraticCurveTo(Math.cos(a + bend) * len * 0.55, Math.sin(a + bend) * len * 0.55, Math.cos(a) * len, Math.sin(a) * len);
         c.stroke();
       }
-      c.fillStyle = strong ? "#9aa1a9" : "#d7dadd"; c.beginPath(); c.arc(0, 0, r * 0.14, 0, 6.2832); c.fill();
+      c.fillStyle = strong ? "#5fc79a" : "#d7dadd"; c.beginPath(); c.arc(0, 0, r * 0.14, 0, 6.2832); c.fill();
       c.restore();
     }
 
@@ -70,7 +70,7 @@
       var lc = layer.getContext("2d"), lc2 = layer2.getContext("2d");
       lc.scale(dpr, dpr); lc2.scale(dpr, dpr);
       lc.fillStyle = "#fafaf9"; lc.fillRect(0, 0, W, H);
-      lc2.fillStyle = "#f4f4f2"; lc2.fillRect(0, 0, W, H);
+      lc2.fillStyle = "#f1f5f2"; lc2.fillRect(0, 0, W, H);
 
       var rand = rng(11), rowH = sp * 0.87;
       var rows = Math.ceil(H / rowH) + 1, cols = Math.ceil(W / sp) + 1;
@@ -243,10 +243,10 @@
 
       for (var i = 0; i < N; i++) {
         var x = lerp(A[i].x, B[i].x, e), y = lerp(A[i].y, B[i].y, e), r = lerp(A[i].r, B[i].r, e);
-        ctx.fillStyle = "rgba(0,0,0,0.10)"; ctx.beginPath(); ctx.arc(x + 1.5, y + 2.5, r, 0, 6.2832); ctx.fill();
+        ctx.fillStyle = "rgba(0,0,0,0.12)"; ctx.beginPath(); ctx.arc(x + 1.5, y + 2.5, r, 0, 6.2832); ctx.fill();
         var g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 1, x, y, r);
-        g.addColorStop(0, "#b4bac1");
-        g.addColorStop(1, "#6b727a");
+        g.addColorStop(0, "#6cc79b");
+        g.addColorStop(1, "#2c7a57");
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill();
       }
 
@@ -254,11 +254,12 @@
       for (var ty = 0; ty < TY; ty++) for (var tx = 0; tx < TX; tx++) {
         var rel = clamp(0.97 - s * (0.12 + 0.82 * noise[ty * TX + tx]), 0, 1);
         var w = clamp((0.97 - rel) / 0.6, 0, 1);             // 0 = reliable, 1 = check
-        ctx.fillStyle = "rgba(35,75,143," + (0.02 + 0.2 * w) + ")";
+        var rr = Math.round(lerp(47, 183, w)), gg = Math.round(lerp(143, 121, w)), bb = Math.round(lerp(107, 31, w));
+        ctx.fillStyle = "rgba(" + rr + "," + gg + "," + bb + "," + (0.10 + 0.16 * w) + ")";
         ctx.fillRect(tx * tw + 1, ty * th + 1, tw - 2, th - 2);
         if (rel < 0.6) {
           bad++;
-          ctx.strokeStyle = "rgba(35,75,143,0.9)"; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+          ctx.strokeStyle = "rgba(183,121,31,0.95)"; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
           ctx.strokeRect(tx * tw + 2, ty * th + 2, tw - 4, th - 4); ctx.setLineDash([]);
         }
       }
